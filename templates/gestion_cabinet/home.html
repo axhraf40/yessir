@@ -1,0 +1,69 @@
+{% extends 'gestion_cabinet/base.html' %}
+
+{% block title %}Accueil - Cabinet Dentaire{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="jumbotron">
+        <h1 class="display-4">Bienvenue au Cabinet Dentaire</h1>
+        <p class="lead">Votre santé dentaire est notre priorité.</p>
+        <hr class="my-4">
+        {% if user.is_authenticated %}
+            {% if user.patient_profile %}
+                <p>Vous êtes connecté en tant que patient.</p>
+                <a class="btn btn-primary btn-lg" href="{% url 'rendez_vous_create' %}" role="button">Prendre un rendez-vous</a>
+            {% elif user.dentiste_profile %}
+                <p>Vous êtes connecté en tant que dentiste.</p>
+                <a class="btn btn-primary btn-lg" href="{% url 'rendez_vous_list' %}" role="button">Voir les rendez-vous</a>
+            {% elif user.secretaire_profile %}
+                <p>Vous êtes connecté en tant que secrétaire.</p>
+                <a class="btn btn-primary btn-lg" href="{% url 'rendez_vous_list' %}" role="button">Gérer les rendez-vous</a>
+            {% endif %}
+        {% else %}
+            <p>Connectez-vous pour accéder à nos services.</p>
+            <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Se connecter</a>
+            <a class="btn btn-secondary btn-lg" href="{% url 'register' %}" role="button">S'inscrire</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-calendar-alt fa-3x text-primary mb-3"></i>
+                <h3 class="card-title">Rendez-vous en ligne</h3>
+                <p class="card-text">Prenez rendez-vous facilement en quelques clics depuis votre espace patient.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-tooth fa-3x text-primary mb-3"></i>
+                <h3 class="card-title">Soins dentaires</h3>
+                <p class="card-text">Une équipe de dentistes qualifiés pour tous vos besoins en soins dentaires.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-file-medical fa-3x text-primary mb-3"></i>
+                <h3 class="card-title">Suivi médical</h3>
+                <p class="card-text">Accédez à votre historique de consultations et vos documents médicaux.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

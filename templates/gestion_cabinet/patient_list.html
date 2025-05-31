@@ -1,0 +1,79 @@
+{% extends 'gestion_cabinet/base.html' %}
+
+{% block title %}Liste des patients - Cabinet Dentaire{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Liste des patients</h1>
+        {% if user.role == 'SECRETAIRE' %}
+        <a href="{% url 'register' %}" class="btn btn-primary">
+            <i class="fas fa-user-plus me-2"></i>Nouveau patient
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- Barre de recherche -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-10">
+                    <input type="text" name="q" class="form-control" placeholder="Rechercher un patient..." value="{{ request.GET.q }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search me-2"></i>Rechercher
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Liste des patients -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Date de naissance</th>
+                            <th>Téléphone</th>
+                            <th>N° Sécurité Sociale</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for patient in patients %}
+                        <tr>
+                            <td>{{ patient.user.last_name }}</td>
+                            <td>{{ patient.user.first_name }}</td>
+                            <td>{{ patient.date_naissance|date:"d/m/Y" }}</td>
+                            <td>{{ patient.telephone }}</td>
+                            <td>{{ patient.numero_securite_sociale }}</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'patient_detail' patient.id %}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-folder-open me-1"></i>Dossier
+                                    </a>
+                                    {% if user.role == 'DENTISTE' or user.role == 'SECRETAIRE' %}
+                                    <a href="{% url 'rendez_vous_create' %}?patient={{ patient.id }}" class="btn btn-sm btn-success">
+                                        <i class="fas fa-calendar-plus me-1"></i>RDV
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center">Aucun patient trouvé.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
